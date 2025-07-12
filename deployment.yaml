@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name : deployment-with-myown-image
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      private: image
+  template:
+    metadata:
+      labels:
+        private: image
+    spec:
+       containers:
+         - name: container-with-flask-app
+           image: akmaralt/flask-secure-app:0.2 
+           ports:
+             - containerPort: 8000
+           securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            allowPrivilegeEscalation: false
+       imagePullSecrets:
+             - name: maral-flask-secret
